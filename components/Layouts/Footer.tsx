@@ -14,6 +14,11 @@ interface Props {
 const MyFooter:FC<Props> = ({isMobile}) => {
     return (
         <Box 
+            pt={15}
+            pb={15}
+            sx={(theme) =>({
+                borderTop: `1px solid ${theme.colors.gray[6]}`
+            })}
         >
             <Grid
                 sx={(theme) => ({

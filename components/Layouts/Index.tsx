@@ -39,9 +39,9 @@ const Layout: FC<Props> = ({ children }) => {
                 :<></> 
             }
             footer={
-                <Footer p="md">
-                    <MyFooter />
-                </Footer>
+                // <Footer p="md" >
+                    <MyFooter isMobile={isMobile}/>
+                // </Footer>
             }
             header={
                 <Header height={{ base: 50, md: 70 }} p="md">
