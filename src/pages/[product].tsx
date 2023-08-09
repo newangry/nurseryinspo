@@ -29,7 +29,7 @@ const ProductItem = () => {
                 <Text mt={30} weight={400} sx={(theme) =>({
                     fontSize: '1.3rem'
                 })}>
-                    Inside Mandy's Workspace
+                    Inside Mandys Workspace
                 </Text>
                 <Box>
                     <Image src='/item.jpg' alt='product_item'/>
@@ -53,7 +53,7 @@ interface Pathpros {
     product: string
 }
 
-export const getStaticProps = async ({ params }) => {
+export const getStaticProps = async () => {
 
     return {
         props: {

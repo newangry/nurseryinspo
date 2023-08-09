@@ -21,7 +21,7 @@ const Submit = () => {
                 fontSize: '1.2rem',
                 color: theme.colors.gray[5]
             })}>
-                There is currently a ~3 month wait to be featured. If this is okay with you, please fill out the form below and we'll be in touch soon.
+                There is currently a ~3 month wait to be featured. If this is okay with you
             </Text>
             <Box mt={30}>
                 <TextInput
