@@ -20,7 +20,8 @@
       "@/hooks/*": ["./hooks/*"],
       "@/utils/*": ["./utils/*"],
       "@/state/*": ["./state/*"],
-      "@/styles/*": ["./styles/*"]
+      "@/styles/*": ["./styles/*"],
+      "@/types/*": ["./types/*"],
 
     }
   },

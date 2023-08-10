@@ -1,13 +1,20 @@
+import { Nurseries } from '@/types/nurseries';
 import { 
     Flex,
     Image,
     Text } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
 import Link from 'next/link';
-const Product = () => {
+import { FC } from 'react';
+
+interface Props {
+    data: Nurseries
+}
+
+const NurseriesItem:FC<Props> = ({data}) => {
     const { hovered, ref } = useHover();
     return (
-        <Link href='/test'>
+        <Link href={`/${data.id}`}>
             <Flex
                 mt={40}
                 gap="md"
@@ -30,11 +37,11 @@ const Product = () => {
                     weight={700}
                     size='xl'
                 >
-                    334 - Gem Zape
+                    {data.name}
                 </Text>
             </Flex>
         </Link>
     )
 }
 
-export default Product;
+export default NurseriesItem;

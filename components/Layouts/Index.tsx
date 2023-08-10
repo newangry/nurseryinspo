@@ -21,7 +21,7 @@ const Layout: FC<Props> = ({ children }) => {
     const theme = useMantineTheme();
     const [opened, setOpened] = useState(false);
     const isMobile = useMediaQuery(`(max-width: ${MOBILE_LIMIT_WIDTH}px)`);
-
+    
     return (
         <AppShell
             styles={{

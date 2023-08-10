@@ -19,8 +19,6 @@ interface Props {
 const MyHeader:FC<Props> = ({isMobile, openNav, openedNav}) => {
     const [path, setPath] = useState<string>('');
 
-    
-    
     useEffect(()=>{
         setPath(window.location.pathname);
     }, [])
@@ -40,8 +38,7 @@ const MyHeader:FC<Props> = ({isMobile, openNav, openedNav}) => {
             value: lightMode == 'dark' ? 'light' : 'dark'
         });
         localStorage.setItem("colorScheme", colorScheme == 'dark' ? 'light' : 'dark');
-        
-    }   
+    } 
     
     return (
         <Box
