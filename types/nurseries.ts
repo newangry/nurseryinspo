@@ -8,3 +8,13 @@ export interface Nurseries{
     zip_code: string,
     email: string
 }
+
+export const NurseriesState = {
+    name: '',
+    description: '',
+    image: '',
+    location: '',
+    phone_number: '',
+    zip_code: '',
+    email: ''
+}
