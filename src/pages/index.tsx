@@ -8,7 +8,7 @@ import {
   Divider,
   Loader
 } from '@mantine/core';
-
+import { notifications } from '@mantine/notifications';
 import MainProduct from '@/components/Spaces/MainProduct';
 import NurseriesItem from '@/components/Spaces/Nurseries';
 import { useEffect, useState } from 'react';
@@ -23,13 +23,21 @@ const Spaces = () => {
   const [nurseries, setNurseries] = useState<Nurseries[]>([]);
   const [latestNurseries, setLatestNurseries] = useState<Nurseries[]>([]);
   const [isLoad, setIsLoad] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>('');
+  const [sendingMail, setSendingMail] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>('');
 
   const getData = async () => {
     setIsLoad(true);
     try {
-      const res = await fetch('/api/get_nurseries');
+      const res = await fetch('/api/get_nurseries', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({search: search})
+      });
       if (res.status != 200) {
-        // console.log(e);
       } else {
 
       }
@@ -45,12 +53,43 @@ const Spaces = () => {
       setNurseries(data);
       setLatestNurseries(_latestNurseries);
     } catch (e) {
-
+      
     }
     setIsLoad(false);
-
   }
 
+  const sendEmail = async() => {
+    setSendingMail(true);
+    try{
+      const res = await fetch('/api/send_email', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({email: email})
+      });
+
+      if(res.status == 200){
+        notifications.show({
+          title: 'Send your email',
+          message: 'Success',
+          color: 'default'
+        })
+        setEmail('');
+      }else{
+        const data = await res.json();
+        notifications.show({
+          title: 'Send your email',
+          message: data.msg,
+          color: 'red',
+        })
+      }
+    }catch(e){
+
+    }
+    setSendingMail(false);
+    
+  }
 
   return (
     <Box>
@@ -86,17 +125,49 @@ const Spaces = () => {
       >
         <Text>Join 12,000+ other readers</Text>
         <Group position="center" className='mt-[15px]' spacing='xs'>
-          <Input placeholder='you@example.com' />
-          <Button variant='outline'>
-            Subscribe for free
+          <Input 
+            placeholder='you@example.com' 
+            value={email} 
+            onChange={(event) => {setEmail(event.target.value)}} 
+            type='email'
+            onKeyUp={(event) => {
+              if(event.keyCode == 13){
+                sendEmail()
+              }
+            }}
+          />
+          <Button variant='outline' onClick={() => {sendEmail()}}>
+            {
+              sendingMail?<Loader variant='dots'/>:'Subscribe for free'
+            }
           </Button>
         </Group>
         <Text className='mt-[15px]'>PUBLISHED BY @</Text>
+
+        <Group  className='mt-[20px]' spacing='xs'>
+          <Input  
+            value={search} 
+            onChange={(event) => { 
+              setSearch(event.target.value)
+            }}
+            onKeyUp={(event) => {
+              if(event.keyCode == 13){
+                getData();
+              }
+            }}
+            placeholder='Search baby nurseries' 
+          />
+          <Button variant='outline' onClick={() => {sendEmail()}}>
+            {
+              sendingMail?<Loader variant='dots'/>:'Search'
+            }
+          </Button>
+        </Group>
       </Box>
       {
-        isLoad? <Loader variant='dots' mt={20} sx={(theme) =>({margin: 'auto'})}/> :
+        isLoad? <Loader variant='dots' mt={10} sx={(theme) =>({margin: 'auto'})}/> :
           <Box>
-            <Grid className='mt-[50px]'>
+            <Grid className='mt-[20px]'>
               {
                 latestNurseries.map((item, key) =>
                   <Grid.Col md={6} lg={4} sm={1} key={key}>

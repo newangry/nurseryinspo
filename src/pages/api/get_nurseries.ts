@@ -7,8 +7,17 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Nurseries[] | null>
 ) {
+    const search = req.body.search;
     try{
-        const { data, error } = await supabaseAdmin.from('nurseries').select("*");
+        const { data, error } = await supabaseAdmin.from('nurseries')
+                        .select("*")
+                        .or(`name.ilike.%${search}%`)
+                        .or(`description.ilike.%${search}%`)
+                        .or(`email.ilike.%${search}%`)
+                        .or(`phone_number.ilike.%${search}%`)
+                        .or(`name.ilike.%${search}%`)
+
+                        
         if(!error){
             res.status(200).json(data)
         } else{

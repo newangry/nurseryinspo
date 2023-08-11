@@ -1,5 +1,6 @@
 import type { AppProps } from 'next/app'
 import '@/styles/globals.css';
+import { Notifications } from '@mantine/notifications';
 import { MantineProvider, ColorSchemeProvider, MantineThemeOverride } from '@mantine/core';
 import { initialState, HomeInitialState } from '@/state/index.state';
 import { useCreateReducer } from '@/hooks/useCreateReducer';
@@ -42,6 +43,7 @@ export default function App({ Component, pageProps }: AppProps) {
             <Layout>
               <Component {...pageProps} />
             </Layout>
+            <Notifications />
         </MantineProvider>
       </ColorSchemeProvider>
     </HomeContext.Provider>
