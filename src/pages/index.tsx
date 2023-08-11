@@ -157,7 +157,7 @@ const Spaces = () => {
             }}
             placeholder='Search baby nurseries' 
           />
-          <Button variant='outline' onClick={() => {sendEmail()}}>
+          <Button variant='outline' onClick={() => {getData()}}>
             {
               sendingMail?<Loader variant='dots'/>:'Search'
             }

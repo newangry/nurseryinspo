@@ -11,12 +11,9 @@ export default async function handler(
     try{
         const { data, error } = await supabaseAdmin.from('nurseries')
                         .select("*")
-                        .or(`name.ilike.%${search}%`)
-                        .or(`description.ilike.%${search}%`)
-                        .or(`email.ilike.%${search}%`)
-                        .or(`phone_number.ilike.%${search}%`)
-                        .or(`name.ilike.%${search}%`)
-
+                        // .ilike("name | email | phone_number | location | zip_code", `%${search}%`)
+                        .or(`name.ilike.%${search}%, description.ilike.%${search}%, email.ilike.%${search}%, phone_number.ilike.%${search}%, location.ilike.%${search}%, zip_code.ilike.%${search}%`)
+                  
                         
         if(!error){
             res.status(200).json(data)
