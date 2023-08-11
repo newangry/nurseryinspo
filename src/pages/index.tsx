@@ -9,7 +9,7 @@ import {
   Loader
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import MainProduct from '@/components/Spaces/MainProduct';
+import MainNurseries from '@/components/Spaces/MainNurseries';
 import NurseriesItem from '@/components/Spaces/Nurseries';
 import { useEffect, useState } from 'react';
 import { Nurseries } from '@/types/nurseries';
@@ -171,7 +171,7 @@ const Spaces = () => {
               {
                 latestNurseries.map((item, key) =>
                   <Grid.Col md={6} lg={4} sm={1} key={key}>
-                    <MainProduct data={item} />
+                    <MainNurseries data={item} />
                   </Grid.Col>
                 )
               }

@@ -8,7 +8,7 @@ interface Props {
     data: Nurseries
 }
 
-const MainProduct:FC<Props> = ( {data} ) => {
+const MainNurseries:FC<Props> = ( {data} ) => {
     const { hovered, ref } = useHover();
     return (
         <Card 
@@ -42,4 +42,4 @@ const MainProduct:FC<Props> = ( {data} ) => {
     )
 }
 
-export default MainProduct;
+export default MainNurseries;

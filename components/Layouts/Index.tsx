@@ -12,7 +12,7 @@ import MyHeader from "@/components/Layouts/Header";
 import MyFooter from "@/components/Layouts/Footer";
 import { useMediaQuery } from "@mantine/hooks";
 import { MOBILE_LIMIT_WIDTH } from "@/utils/app/consts";
-import MyNavbar from "./Navbar";
+import MyNavbar from "@/components/Layouts/Navbar";
 
 interface Props {
     children: JSX.Element,
