@@ -1,27 +1,31 @@
 import { Nurseries } from '@/types/nurseries';
 import { Card, Image, Text, Badge, Button, Group } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
-import Link from 'next/link';
-import { FC } from 'react';
+import { FC, useState } from 'react';
+import EditModal from './EditModal';
 
 interface Props {
-    data: Nurseries
+    data: Nurseries,
+    open: () => void,
+    saveData: (data: Nurseries) => void;
 }
 
-const MainNurseries:FC<Props> = ( {data} ) => {
+const Nursires: FC<Props> = ({ data, open, saveData }) => {
+    
     const { hovered, ref } = useHover();
+
     return (
-        <Card 
-            shadow="sm" 
-            padding="lg" radius="md" 
-            withBorder 
-            sx={(theme)=>({
+        <Card
+            shadow="sm"
+            padding="lg" radius="md"
+            withBorder
+            sx={(theme) => ({
                 cursor: 'pointer',
-                opacity: hovered?0.7:1
+                opacity: hovered ? 0.7 : 1
             })}
             ref={ref}
+            onClick={()=>{open(); saveData(data)}}
         >
-            <Link href={`/${data.id}`}>
             <Card.Section component="a">
                 <Image
                     src={data.image}
@@ -35,11 +39,10 @@ const MainNurseries:FC<Props> = ( {data} ) => {
             </Group>
 
             <Text size="sm" color="dimmed">
-               {data.description}
+                {data.description}
             </Text>
-            </Link>
         </Card>
     )
 }
 
-export default MainNurseries;
+export default Nursires;

@@ -27,9 +27,13 @@ const NurseriesItem:FC<Props> = ({data}) => {
                 })}
                 ref={ref}
             >
-                <Image src='/product.png' alt='product' radius={10} sx={(theme)=>({
-                    opacity: hovered?0.7:1
-                })}/>
+                <Image src={data.image} className='nursery-img' alt='product' radius={10} sx={(theme)=>({
+                    opacity: hovered?0.7:1,
+                    width: '100%',
+
+                })}
+                />
+
                 <Text
                     sx={(theme) =>({
                         color: theme.colors.gray[7]

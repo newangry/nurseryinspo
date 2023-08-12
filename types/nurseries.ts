@@ -6,7 +6,10 @@ export interface Nurseries{
     id?:number,
     phone_number: string,
     zip_code: string,
-    email: string
+    email: string,
+    person_name: string,
+    room_width: string,
+    room_height: string,
 }
 
 export const NurseriesState = {
@@ -16,5 +19,8 @@ export const NurseriesState = {
     location: '',
     phone_number: '',
     zip_code: '',
-    email: ''
+    email: '',
+    person_name:'',
+    room_width: "0",
+    room_height: '0'
 }

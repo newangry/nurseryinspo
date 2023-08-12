@@ -41,7 +41,6 @@ export  async function getNurseryNames() {
 export async function getNursery(id: number) {
     try{
         const { data, error } = await supabaseAdmin.from('nurseries').select("*").eq("id", 5);
-
         if(!error){
             return data[0];
         } else{

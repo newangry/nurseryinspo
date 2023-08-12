@@ -61,12 +61,21 @@ const ProductItem = () => {
                 Location: {data.location}
             </Text>
             <Text mt={5}>
+                Person name: {data.person_name}
+            </Text>
+            <Text mt={5}>
+                Email: {data.phone_number}
+            </Text>
+            <Text mt={5}>
                 Phone number: {data.phone_number}
             </Text>
-
+            <Text mt={5}>
+                Room size(m): {`${data.room_width} × ${data.room_height}`}
+            </Text>
             <Box mt={20}>
-                <Image src='/item.jpg' alt='product_item'/>
+                <Image src={data.image} alt='product_item'/>
             </Box>
+
         </Box>
     )
 }
