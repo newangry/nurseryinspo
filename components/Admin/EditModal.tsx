@@ -47,7 +47,13 @@ const EditModal: FC<Props> = ({
         const FR = new FileReader();
 
         FR.addEventListener("load", function (evt) {
-            form.setFieldValue('image', event?.target.result);
+            const event = evt as ProgressEvent<FileReader>; // Casting evt to ProgressEvent<FileReader>
+            if (event.target && typeof event.target.result === "string") { // Adding type check for result property
+            const target = event.target as FileReader & {
+                result: string; // Specify the correct type for result property
+            };
+            form.setFieldValue("image", target.result);
+            }  
         });
         FR.readAsDataURL(file);
 
