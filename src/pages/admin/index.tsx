@@ -151,7 +151,7 @@ const Spaces = () => {
             </Box>
            
             {
-                nurseries.length == 0?<Text align='center' size='lg' mt={20}> No Data </Text>:
+                nurseries.length == 0?<Text align='center' size='lg' mt={20}>  </Text>:
                 <Grid className='mt-[20px]' >
                     {
                         nurseries.map((item, key) =>
