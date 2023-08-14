@@ -10,29 +10,27 @@ export const config = {
     },
 }
 
-type Data = {
-  msg: string
-}
-
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse
 ) {
     const params = req.body;
-
+    const del = await supabaseAdmin.from('nursery_images').delete().eq("nurseries_id", params.id);
     try{
-        let res: any;
+        let result: any;
         if(params.type == 'edit'){
-            res = await supabaseAdmin.from('nurseries').upsert([params.data]).eq('id', params.id);
+            result = await supabaseAdmin.from('nurseries').upsert([params.data]).eq('id', params.id).select("*");
         }else{
-            res = await supabaseAdmin.from('nurseries').insert([params.data]);
+            result = await supabaseAdmin.from('nurseries').insert([params.data]).select("*");
         }
-        if(!res.error){
-            res.status(200).json({msg: 'Success'})
+
+        if(result.data){
+            res.status(200).json({msg: 'Success', id: result.data[0].id})
         } else{
-            res.status(200).json({msg: res.error})
+            res.status(201).json({msg: result.error})
         }   
     } catch(e: any){
-        res.status(200).json({msg: e})
+        console.log(e);
+        res.status(202).json({msg: e})
     }
 }

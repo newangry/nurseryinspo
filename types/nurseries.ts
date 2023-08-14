@@ -10,6 +10,7 @@ export interface Nurseries{
     person_name: string,
     room_width: string,
     room_height: string,
+    images?:string[] | undefined
 }
 
 export const NurseriesState = {
@@ -22,5 +23,6 @@ export const NurseriesState = {
     email: '',
     person_name:'',
     room_width: "0",
-    room_height: '0'
+    room_height: '0',
+    images:[]
 }

@@ -39,26 +39,27 @@ const Spaces = () => {
                 body: JSON.stringify({ search: search })
             });
             if (res.status != 200) {
+
             } else {
 
             }
+            
             const data = await res.json();
-            let count = 3;
-            if (data.length < 3) {
-                count = data.length;
-            }
-
             setNurseries(data);
+
         } catch (e) {
             console.log(e);
         }
         setIsLoad(false);
     }
 
-    const saveData = async(_data: Nurseries) => {
+    const saveData = async(_data: Nurseries, images: string[]) => {
         setOpen(false);
         setIsLoad(true);
-        
+        if(images.length > 0){
+            _data['image'] = images[0];
+        }
+
         try {
             const params = {
                 type,
@@ -71,6 +72,21 @@ const Spaces = () => {
                 },
                 body: JSON.stringify(params)
             });
+            let id=0;
+            if(res.status == 200){
+                const data = await res.json();
+                for(let k =0; k<images.length; k++){
+                    const res = await fetch('/api/admin/add_nusery_images', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({image: images[k], nurseries_id: data.id})
+                    });
+                }
+            }   
+            
+
             getData();
             notifications.show({
                 title: 'Send ',
@@ -119,6 +135,7 @@ const Spaces = () => {
     }
 
     return (
+        
         <Box>
             <Box
                 className='text-center mt-[40px]'
@@ -149,8 +166,8 @@ const Spaces = () => {
                     </Button>
                 </Group>
             </Box>
-           
             {
+                isLoad? <Loader variant='dots' mt={10} sx={(theme) =>({margin: 'auto'})}/> :
                 nurseries.length == 0?<Text align='center' size='lg' mt={20}>  </Text>:
                 <Grid className='mt-[20px]' >
                     {

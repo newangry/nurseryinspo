@@ -17,6 +17,7 @@ const ProductItem = () => {
     const { nurseries } = router.query;
     const [ data, setData ] = useState<Nurseries>(NurseriesState) 
     const [ isload, setIsLoad] = useState<boolean>(false);
+    const [images, setImages] = useState<string[]>([]);
 
     useEffect(() => {
         getData();
@@ -36,7 +37,8 @@ const ProductItem = () => {
     
             if(res.status == 200){
                 const _data = await res.json();
-                setData(_data);
+                setData(_data.data);
+                setImages(_data.images);
             }
         }catch(e){
             console.log(e);
@@ -73,7 +75,11 @@ const ProductItem = () => {
                 Room size(m): {`${data.room_width} × ${data.room_height}`}
             </Text>
             <Box mt={20}>
-                <Image src={data.image} alt='product_item'/>
+                {
+                    images.map((image, key) => 
+                        <Image src={image} alt='product_item' key={key} />
+                    )   
+                }
             </Box>
 
         </Box>

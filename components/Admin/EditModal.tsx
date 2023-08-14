@@ -1,6 +1,6 @@
 import { Nurseries } from "@/types/nurseries";
 import { Flex, Modal, TextInput, Textarea, Text, Button, Box, Image } from "@mantine/core";
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Dropzone } from '@mantine/dropzone';
 import { IconPhoto } from "@tabler/icons-react";
 import { useForm } from '@mantine/form';
@@ -10,7 +10,7 @@ interface Props {
     opened: boolean,
     data: Nurseries,
     type: string,
-    saveData: (data: Nurseries) => void
+    saveData: (data: Nurseries, images: string[]) => void
     deleteNursery: () =>void
 }
 
@@ -22,6 +22,8 @@ const EditModal: FC<Props> = ({
     saveData,
     deleteNursery
 }) => {
+
+    const [ images, setImages] = useState<string[] | undefined>([]);
 
     const form = useForm({
         initialValues: {
@@ -41,23 +43,57 @@ const EditModal: FC<Props> = ({
         },
     });
 
-    const convertToBase64 = (files: File[]) => {
-        const file: File = files[0];
+    useEffect(() => {
+        if(type != "edit"){
+            setImages([]);
+        }
+    }, [type])
 
-        const FR = new FileReader();
-
-        FR.addEventListener("load", function (evt) {
-            const event = evt as ProgressEvent<FileReader>; // Casting evt to ProgressEvent<FileReader>
-            if (event.target && typeof event.target.result === "string") { // Adding type check for result property
-            const target = event.target as FileReader & {
-                result: string; // Specify the correct type for result property
-            };
-            form.setFieldValue("image", target.result);
-            }  
-        });
-        FR.readAsDataURL(file);
-
+    const convertToBase64 = async(files: File[]) => {
+        const _images:any = [];
+        for(let k=0; k<files.length; k++){
+            const file = files[k];
+            const readAsDataURL = () => {
+                return new Promise((resolve, reject) => {
+                  const FR = new FileReader();
+          
+                  FR.addEventListener("load", function (evt) {
+                    const event = evt as ProgressEvent<FileReader>; // Casting evt to ProgressEvent<FileReader>
+          
+                    if (event.target && typeof event.target.result === "string") { // Adding type check for result property
+                      const target = event.target as FileReader & {
+                        result: string; // Specify the correct type for result property
+                      };
+          
+                      resolve(target.result);
+                    } else {
+                      reject(new Error("Invalid file format"));
+                    }
+                  });
+          
+                  FR.onerror = () => {
+                    reject(new Error("Failed to read file"));
+                  };
+          
+                  FR.readAsDataURL(file);
+                });
+            };  
+            try {
+                const result = await readAsDataURL();
+                _images.push(result);
+              } catch (error) {
+                console.error(error);
+            }   
+        }
+        setImages(_images);
     }
+
+    const handleSave = () => {
+        if(images){
+            saveData(form.values, images);
+        }
+    }
+
     useEffect(() => {
         form.setFieldValue('name', data.name);
         form.setFieldValue('person_name', data.person_name)
@@ -70,7 +106,7 @@ const EditModal: FC<Props> = ({
         form.setFieldValue('id', data.id)
         form.setFieldValue('room_width', data.room_width)
         form.setFieldValue('room_height', data.room_height)
-
+        setImages(data.images);
 
     }, [data])
 
@@ -164,16 +200,20 @@ const EditModal: FC<Props> = ({
                 </Flex>
 
                 {
-                    form.values.image !== "" && form.values.image ?
+                    images?.length !=0 ?
                     <Box>
                         <Text color="red" sx={(theme) =>({
                             borderBottom: '1px solid red',
                             cursor: 'pointer',
                             textAlign: 'right'
                         })}
-                            onClick={() => {form.setFieldValue('image', '')}}
+                            onClick={() => {setImages([])}}
                         >Remove image</Text>
-                        <Image src={form.values.image} alt='' />
+                        {
+                            images?.map((item, key) =>
+                                <Image src={item} alt='' key={key} mt={10}/>        
+                            )
+                        }
                     </Box> :
                     <Dropzone
                         accept={{
@@ -203,7 +243,7 @@ const EditModal: FC<Props> = ({
                     align='center'
                     gap='md'
                 >
-                    <Button variant="outline" onClick={() => { saveData(form.values) }}>Save</Button>
+                    <Button variant="outline" onClick={() => { handleSave() }}>Save</Button>
                     {
                         type == 'edit'?
                         <Button variant="outline" color="red" onClick={() => {deleteNursery()}}>Delete</Button>
