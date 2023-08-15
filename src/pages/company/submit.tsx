@@ -83,9 +83,11 @@ const Submit = ({
                 console.error(error);
             }
         }
-        setImages(_images);
+        let  p_images: any = [];
+        p_images = p_images.concat(images, _images); 
+        setImages(p_images);
     }
-
+    
     const handleSave = async() => {
         setIsLoader(true);
         const data = form.values;
@@ -179,15 +181,25 @@ const Submit = ({
             gap={15}
             direction="column"
         >
-
-            <TextInput
-                placeholder=""
-                label="Your name"
-                value={form.values.person_name}
-                withAsterisk
-                onChange={(event) => form.setFieldValue('person_name', event.currentTarget.value)}
-            />
-
+            <Group
+                grow
+            >
+                <TextInput
+                    placeholder=""
+                    label="Your name"
+                    value={form.values.person_name}
+                    withAsterisk
+                    onChange={(event) => form.setFieldValue('person_name', event.currentTarget.value)}
+                />
+                <TextInput
+                    placeholder=""
+                    label="Email"
+                    type="email"
+                    value={form.values.email}
+                    withAsterisk
+                    onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+                />
+            </Group>
             <TextInput
                 placeholder=""
                 label="Nursery name"
@@ -203,26 +215,19 @@ const Submit = ({
                 withAsterisk
                 onChange={(event) => form.setFieldValue('description', event.currentTarget.value)}
             />
-            <Select
-                label="Tags"
-                data={[
-                    { value: 'girls', label: 'nursery for boy' },
-                    { value: 'boy', label: 'nursery for girls' },
-                    { value: 'neutral', label: 'gender neutral nursery' },
-                ]}
-                value={form.values.tag}
-                onChange={(value) => {form.setFieldValue('tag', value??'')}}
-            />
+            
             <Group
                 grow
             >
-                <TextInput
-                    placeholder=""
-                    label="Email"
-                    type="email"
-                    value={form.values.email}
-                    withAsterisk
-                    onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+                <Select
+                    label="Tags"
+                    data={[
+                        { value: 'girls', label: 'nursery for boy' },
+                        { value: 'boy', label: 'nursery for girls' },
+                        { value: 'neutral', label: 'gender neutral nursery' },
+                    ]}
+                    value={form.values.tag}
+                    onChange={(value) => {form.setFieldValue('tag', value??'')}}
                 />
                 <TextInput
                     placeholder=""
@@ -242,43 +247,80 @@ const Submit = ({
                 />
             </Group>
             <Box>
+                {
+                    images.length > 0?
+                    <Text color="red" sx={(theme) => ({
+                        borderBottom: '1px solid red',
+                        cursor: 'pointer',
+                        textAlign: 'right'
+                    })}
+                        onClick={() => { setImages([]) }}
+                    >Remove images</Text>:<></>
+                }
+                
+                {
+                    images?.map((item, key) =>
+                    
+                        <Image src={item} alt='' key={key} mt={10} />
+                    )
+                }
+            </Box> 
+            <Dropzone
+                accept={{
+                    'image/*': [], // All images
+                    'text/html': ['.png', '.jpg'],
+                }}
+                onDrop={(files) => { convertToBase64(files) }}
+            >
+                <Flex
+                    justify='center'
+                    align='center'
+                    h={200}
+                >
+                    <Box>
+                        <Dropzone.Idle>
+                            <IconPhoto size="3.2rem" stroke={1.5} color="#666666" />
+                        </Dropzone.Idle>
+                        <Text size="xl" inline>
+                            Drage a image here or click to select file ( jpg )
+                        </Text>
+                    </Box>
+                </Flex>
+            </Dropzone>
+            <Box>
                 <Text mt={10} weight={500}>
                     Items
                 </Text>
                 
-                {
-                    items.length == 0?
-                    <Text mt={10} ta='center'>No added items</Text>:
-                    <List withPadding 
-                        icon={
-                            <IconCheck size='1rem'/>
-                        }
-                        center
-                        mt={10}
-                    >
-                        {
-                            items.map((item, key) => 
-                                <List.Item key={key}>
-                                    <Group>
-                                    {
-                                        item.url !== ''?
-                                        <a href={item.url} target="blank">
-                                            <Text>
-                                                {item.name} (${item.price} )
-                                            </Text>
-                                            
-                                        </a>:
+                <List withPadding 
+                    icon={
+                        <IconCheck size='1rem'/>
+                    }
+                    center
+                    mt={10}
+                >
+                    {
+                        items.map((item, key) => 
+                            <List.Item key={key}>
+                                <Group>
+                                {
+                                    item.url !== ''?
+                                    <a href={item.url} target="blank">
                                         <Text>
                                             {item.name} (${item.price} )
                                         </Text>
-                                    }
-                                    <IconTrash size={'1rem'} className="cursor-pointer" onClick={() => {removeItem(key)}}/>
-                                    </Group>
-                                </List.Item>
-                            )
-                        }
-                    </List>
-                }
+                                        
+                                    </a>:
+                                    <Text>
+                                        {item.name} (${item.price} )
+                                    </Text>
+                                }
+                                <IconTrash size={'1rem'} className="cursor-pointer" onClick={() => {removeItem(key)}}/>
+                                </Group>
+                            </List.Item>
+                        )
+                    }
+                </List>
                 <Group
                         grow
                     >
@@ -306,46 +348,6 @@ const Submit = ({
                 </Group>
             </Box>
             
-            {
-                images?.length != 0 ?
-                    <Box>
-                        <Text color="red" sx={(theme) => ({
-                            borderBottom: '1px solid red',
-                            cursor: 'pointer',
-                            textAlign: 'right'
-                        })}
-                            onClick={() => { setImages([]) }}
-                        >Remove image</Text>
-                        {
-                            images?.map((item, key) =>
-                            
-                                <Image src={item} alt='' key={key} mt={10} />
-                            )
-                        }
-                    </Box> :
-                    <Dropzone
-                        accept={{
-                            'image/*': [], // All images
-                            'text/html': ['.png', '.jpg'],
-                        }}
-                        onDrop={(files) => { convertToBase64(files) }}
-                    >
-                        <Flex
-                            justify='center'
-                            align='center'
-                            h={200}
-                        >
-                            <Box>
-                                <Dropzone.Idle>
-                                    <IconPhoto size="3.2rem" stroke={1.5} color="#666666" />
-                                </Dropzone.Idle>
-                                <Text size="xl" inline>
-                                    Drage a image here or click to select file ( jpg )
-                                </Text>
-                            </Box>
-                        </Flex>
-                    </Dropzone>
-            }
             <Flex
                 justify='flex-end'
                 align='center'

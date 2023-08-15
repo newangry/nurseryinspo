@@ -10,6 +10,7 @@ import {
     Input,
     List
 } from '@mantine/core';
+
 import { getNursery, getNurseryNames } from './api/get_nurseries';
 import { Item, Nurseries } from '@/types/nurseries';
 import { useRouter } from 'next/router';
@@ -107,24 +108,24 @@ const ProductItem = () => {
                         direction='column'
                     >
 
-                        <Text mt={15} size='lg' sx={(theme) => ({
+                        <Text mt={15} sx={(theme) => ({
                             fontSize: '2rem',
                             color: theme.colors.gray[7]
                         })}>
                             {data.description}
                         </Text>
-                        <Text mt={5} size='lg' sx={(theme) => ({
-                            color: theme.colors.gray[6]
+                        <Text mt={5} size='1.2rem' weight={400} sx={(theme) => ({
+                            color: theme.colors.gray[7]
                         })}>
                             Email: {data.email}
                         </Text>
-                        <Text mt={5} size='lg' sx={(theme) => ({
-                            color: theme.colors.gray[6]
+                        <Text mt={5} size='1.2rem' sx={(theme) => ({
+                            color: theme.colors.gray[7]
                         })}>
                             Room size(m): {`${data.room_width} × ${data.room_height}`}
                         </Text>
-                        <Text mt={5} size='lg' sx={(theme) => ({
-                            color: theme.colors.gray[6]
+                        <Text mt={5} size='1.2rem' sx={(theme) => ({
+                            color: theme.colors.gray[7]
                         })}>
                             Tag: {data.tag}
                         </Text>

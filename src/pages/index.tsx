@@ -90,27 +90,6 @@ const Spaces = () => {
           color: theme.colors.gray[6]
         })}
       >
-        {/* <Text>Join 12,000+ other readers</Text>
-        <Group position="center" className='mt-[15px]' spacing='xs'>
-          <Input 
-            placeholder='you@example.com' 
-            value={email} 
-            onChange={(event) => {setEmail(event.target.value)}} 
-            type='email'
-            onKeyUp={(event) => {
-              if(event.keyCode == 13){
-                sendEmail()
-              }
-            }}
-          />
-          <Button variant='outline' onClick={() => {sendEmail()}}>
-            {
-              sendingMail?<Loader variant='dots'/>:'Subscribe for free'
-            }
-          </Button>
-        </Group>
-        <Text className='mt-[15px]'>PUBLISHED BY @</Text> */}
-
         <Group  className='mt-[20px]' spacing='xs' position="center" grow>
           <Input  
             value={search} 
@@ -137,11 +116,11 @@ const Spaces = () => {
       {
         isLoad? <Loader variant='dots' mt={10} sx={(theme) =>({margin: 'auto'})}/> :
           <Box>
-            <Grid className='mt-[20px]'>
+            <Grid className='mt-[20px]' gutter={70}>
               {
                 latestNurseries.map((item, key) =>
-                  <Grid.Col md={6} lg={4} sm={1} key={key}>
-                    <MainNurseries data={item} />
+                  <Grid.Col md={6} lg={4} sm={1} key={key} >
+                    <MainNurseries data={item} index={key}/>
                   </Grid.Col>
                 )
               }
