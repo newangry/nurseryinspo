@@ -2,15 +2,15 @@ export interface Nurseries{
     name: string,
     description: string,
     image: string,
-    location: string,
     id?:number,
-    phone_number: string,
-    zip_code: string,
     email: string,
     person_name: string,
     room_width: string,
     room_height: string,
     images?:string[] | undefined
+    items?:any,
+    status?: boolean,
+    tag: string
 }
 
 export const NurseriesState = {
@@ -24,5 +24,15 @@ export const NurseriesState = {
     person_name:'',
     room_width: "0",
     room_height: '0',
-    images:[]
+    images:[],
+    items: [],
+    status: false,
+    tag: ''
+
+}
+
+export interface Item {
+    name: string,
+    price: string,
+    url: string
 }

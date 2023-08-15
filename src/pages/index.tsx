@@ -8,7 +8,6 @@ import {
   Divider,
   Loader
 } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
 import MainNurseries from '@/components/Spaces/MainNurseries';
 import NurseriesItem from '@/components/Spaces/Nurseries';
 import { useEffect, useState } from 'react';
@@ -23,7 +22,6 @@ const Spaces = () => {
   const [nurseries, setNurseries] = useState<Nurseries[]>([]);
   const [latestNurseries, setLatestNurseries] = useState<Nurseries[]>([]);
   const [isLoad, setIsLoad] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>('');
   const [sendingMail, setSendingMail] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
 
@@ -58,38 +56,7 @@ const Spaces = () => {
     setIsLoad(false);
   }
 
-  const sendEmail = async() => {
-    setSendingMail(true);
-    try{
-      const res = await fetch('/api/send_email', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({email: email})
-      });
-
-      if(res.status == 200){
-        notifications.show({
-          title: 'Send your email',
-          message: 'Success',
-          color: 'default'
-        })
-        setEmail('');
-      }else{
-        const data = await res.json();
-        notifications.show({
-          title: 'Send your email',
-          message: data.msg,
-          color: 'red',
-        })
-      }
-    }catch(e){
-
-    }
-    setSendingMail(false);
-    
-  }
+  
 
   return (
     <Box>
@@ -123,7 +90,7 @@ const Spaces = () => {
           color: theme.colors.gray[6]
         })}
       >
-        <Text>Join 12,000+ other readers</Text>
+        {/* <Text>Join 12,000+ other readers</Text>
         <Group position="center" className='mt-[15px]' spacing='xs'>
           <Input 
             placeholder='you@example.com' 
@@ -142,9 +109,9 @@ const Spaces = () => {
             }
           </Button>
         </Group>
-        <Text className='mt-[15px]'>PUBLISHED BY @</Text>
+        <Text className='mt-[15px]'>PUBLISHED BY @</Text> */}
 
-        <Group  className='mt-[20px]' spacing='xs'>
+        <Group  className='mt-[20px]' spacing='xs' position="center" grow>
           <Input  
             value={search} 
             onChange={(event) => { 
@@ -156,8 +123,11 @@ const Spaces = () => {
               }
             }}
             placeholder='Search baby nurseries' 
+            
           />
-          <Button variant='outline' onClick={() => {getData()}}>
+          <Button variant='outline' onClick={() => {getData()}} sx={((theme) => ({
+            maxWidth: '150px'
+          }))}>
             {
               sendingMail?<Loader variant='dots'/>:'Search'
             }

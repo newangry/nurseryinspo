@@ -8,28 +8,42 @@ export default async function handler(
   res: NextApiResponse
 ) {
     const search = req.body.search;
+    const type = req.body.type;
+
     try{
-        const { data, error } = await supabaseAdmin.from('nurseries')
+
+        let nurseries_data: any = [];
+        if(type == "admin"){
+            nurseries_data = await supabaseAdmin.from('nurseries')
                         .select("*")
                         // .ilike("name | email | phone_number | location | zip_code", `%${search}%`)
-                        .or(`name.ilike.%${search}%, description.ilike.%${search}%, email.ilike.%${search}%, phone_number.ilike.%${search}%, location.ilike.%${search}%, zip_code.ilike.%${search}%`)
-        if(!error){
-            for(let k = 0; k<data.length; k++){
+                        .or(`name.ilike.%${search}%, description.ilike.%${search}%, email.ilike.%${search}%`)
+        } else {
+            nurseries_data = await supabaseAdmin.from('nurseries')
+                        .select("*")    
+                        // .ilike("name | email | phone_number | location | zip_code", `%${search}%`)
+                        .or(`name.ilike.%${search}%, description.ilike.%${search}%, email.ilike.%${search}%`)
+                        .eq('status', true);   
+        }
+        
+        if(!nurseries_data.error){
+            for(let k = 0; k<nurseries_data.data.length; k++){
                 const images: string[] = [];
-                const image_data = await supabaseAdmin.from('nursery_images').select("*").eq("nurseries_id", data[k].id);
+                const image_data = await supabaseAdmin.from('nursery_images').select("*").eq("nurseries_id", nurseries_data.data[k].id);
                 if(image_data.data) {
                     image_data.data.map((item) => {
                         images.push(item.image);
                     })
                 }
-                data[k].images = images;
+                nurseries_data.data[k].images = images;
             }
-            res.status(200).json(data)
+            res.status(200).json(nurseries_data.data)
         } else{
-            res.status(429).json([])
+            res.status(201).json([])
         }   
     } catch(e){
-        res.status(429).json([])
+        console.log(e);
+        res.status(202).json([])
     }
 }
 

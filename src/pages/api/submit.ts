@@ -7,12 +7,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-    const params = req.body;
-    const { error } = await supabaseAdmin.from("send_requests").insert([{
-        name: params.name,
-        email: params.email,
-        twitter: params.twitter,
-    }])    
+    const params = req.body.data;
+    params['items'] = req.body.items;
+    const { error } = await supabaseAdmin.from("nurseries").insert([params])
+
     if(error){
         res.status(429).json({ msg: 'error' })
     } else {

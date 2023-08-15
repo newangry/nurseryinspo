@@ -10,7 +10,7 @@ import {
 import { notifications } from '@mantine/notifications';
 import NurseriesItem from '@/components/Spaces/Nurseries';
 import { useEffect, useState } from 'react';
-import { Nurseries, NurseriesState } from '@/types/nurseries';
+import { Item, Nurseries, NurseriesState } from '@/types/nurseries';
 import { IconPlus } from '@tabler/icons-react';
 import Nursires from '@/components/Admin/NursiresItem';
 import EditModal from '@/components/Admin/EditModal';
@@ -36,7 +36,7 @@ const Spaces = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ search: search })
+                body: JSON.stringify({ search: search, type: 'admin' })
             });
             if (res.status != 200) {
 
@@ -53,9 +53,37 @@ const Spaces = () => {
         setIsLoad(false);
     }
 
-    const saveData = async(_data: Nurseries, images: string[]) => {
+    const setStatus = async(status: boolean, nurseries_id: number) => {
         setOpen(false);
         setIsLoad(true);
+        const res = await fetch('/api/admin/set_status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({status: status, id: nurseries_id})
+        });
+        if(res.status == 200){
+            notifications.show({
+                title: 'Status',
+                message: 'Success',
+                color: 'default'
+            })
+            getData();
+        } else {
+            notifications.show({
+                title: 'Status',
+                message: 'Error',
+                color: 'red'
+            })
+        }
+        setIsLoad(false);
+    }
+
+    const saveData = async(_data: Nurseries, images: string[], items: Item[]) => {
+        setOpen(false);
+        setIsLoad(true);
+        setData(NurseriesState);
         if(images.length > 0){
             _data['image'] = images[0];
         }
@@ -63,7 +91,8 @@ const Spaces = () => {
         try {
             const params = {
                 type,
-                data:_data
+                data:_data,
+                items
             }
             const res = await fetch('/api/admin/add_nurseries', {
                 method: 'POST',
@@ -72,19 +101,18 @@ const Spaces = () => {
                 },
                 body: JSON.stringify(params)
             });
+
             let id=0;
-            if(res.status == 200){
-                const data = await res.json();
-                for(let k =0; k<images.length; k++){
-                    const res = await fetch('/api/admin/add_nusery_images', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({image: images[k], nurseries_id: data.id})
-                    });
-                }
-            }   
+            const data = await res.json();
+            for(let k =0; k<images.length; k++){
+                const res = await fetch('/api/admin/add_nusery_images', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({image: images[k], nurseries_id: data.id})
+                });
+            }
             
 
             getData();
@@ -98,7 +126,7 @@ const Spaces = () => {
         }
         setIsLoad(false);
     }
-
+    
     const addNew = () => {
         setType('new');
         setData(NurseriesState);
@@ -106,7 +134,6 @@ const Spaces = () => {
     }
     
     const deleteNursery = async() => {
-        alert();
         setIsLoad(true);
         setOpen(false);
         const res = await fetch('/api/admin/delete_nurseries', {
@@ -189,6 +216,7 @@ const Spaces = () => {
                 type={type}
                 saveData={saveData}
                 deleteNursery={deleteNursery}
+                setStatus={setStatus}
             />
         </Box>
     )

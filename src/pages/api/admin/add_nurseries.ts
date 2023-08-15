@@ -14,14 +14,16 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-    const params = req.body;
+    const params = req.body.data;
+    params.items = req.body.items;
     const del = await supabaseAdmin.from('nursery_images').delete().eq("nurseries_id", params.id);
     try{
         let result: any;
-        if(params.type == 'edit'){
-            result = await supabaseAdmin.from('nurseries').upsert([params.data]).eq('id', params.id).select("*");
+        if(req.body.type == 'edit'){
+            const id = params.id;
+            result = await supabaseAdmin.from('nurseries').upsert([params]).eq('id', id).select("*");
         }else{
-            result = await supabaseAdmin.from('nurseries').insert([params.data]).select("*");
+            result = await supabaseAdmin.from('nurseries').insert([params]).select("*");
         }
 
         if(result.data){
