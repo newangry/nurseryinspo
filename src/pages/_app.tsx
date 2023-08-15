@@ -1,5 +1,6 @@
 import type { AppProps } from 'next/app'
 import '@/styles/globals.css';
+// import 'https://fonts.googleapis.com/css?family=Caveat';
 import { Notifications } from '@mantine/notifications';
 import { MantineProvider, ColorSchemeProvider, MantineThemeOverride } from '@mantine/core';
 import { initialState, HomeInitialState } from '@/state/index.state';

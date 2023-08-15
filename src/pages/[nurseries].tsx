@@ -18,6 +18,7 @@ import { NurseriesState } from '../../types/nurseries';
 import { useState, useEffect } from 'react';
 import { notifications } from '@mantine/notifications';
 import { IconCheck } from '@tabler/icons-react';
+import { useMediaQuery } from "@mantine/hooks";
 
 const ProductItem = () => {
 
@@ -28,6 +29,7 @@ const ProductItem = () => {
     const [images, setImages] = useState<string[]>([]);
     const [email, setEmail] = useState<string>('');
     const [sendingMail, setSendingMail] = useState<boolean>(false);
+    const isMobile = useMediaQuery(`(max-width: 760px)`);
 
     useEffect(() => {
         getData();
@@ -98,7 +100,7 @@ const ProductItem = () => {
             >
                 <Box
                     sx={(theme) => ({
-                        width: '68%'
+                        width: isMobile?'100%':'68%'
                     })}
                 >
 
@@ -171,39 +173,42 @@ const ProductItem = () => {
                         }
                     </List>
                 </Box>
+                {
+                    !isMobile?
+                    <Box
+                        p={10}
+                        sx={(theme) => ({
+                            position: 'sticky',
+                            top: '100px',
+                            width: '30%',
+                            height: '150px'
+                        })}
+                    >
+                        <Card shadow="sm" padding="lg" radius="md" withBorder>
+                            <Text size="sm" color="dimmed">
+                                Thanks for reading Workspaces! Subscribe below to receive new workspace in your inbox every Saturday and Sunday!
+                            </Text>
 
-                <Box
-                    p={10}
-                    sx={(theme) => ({
-                        position: 'sticky',
-                        top: '100px',
-                        width: '30%',
-                        height: '150px'
-                    })}
-                >
-                    <Card shadow="sm" padding="lg" radius="md" withBorder>
-                        <Text size="sm" color="dimmed">
-                            Thanks for reading Workspaces! Subscribe below to receive new workspace in your inbox every Saturday and Sunday!
-                        </Text>
-
-                        <Group position="center" className='mt-[15px]' spacing='xs' grow>
-                            <Input
-                                placeholder='you@example.com'
-                                value={email}
-                                onChange={(event) => { setEmail(event.target.value) }}
-                                type='email'
-                                onKeyUp={(event) => {
-                                    if (event.keyCode == 13) {
-                                        sendEmail()
-                                    }
-                                }}
-                            />
-                            <Button variant='outline'>
-                                Subscribe for free
-                            </Button>
-                        </Group>
-                    </Card>
-                </Box>
+                            <Group position="center" className='mt-[15px]' spacing='xs' grow>
+                                <Input
+                                    placeholder='you@example.com'
+                                    value={email}
+                                    onChange={(event) => { setEmail(event.target.value) }}
+                                    type='email'
+                                    onKeyUp={(event) => {
+                                        if (event.keyCode == 13) {
+                                            sendEmail()
+                                        }
+                                    }}
+                                />
+                                <Button variant='outline'>
+                                    Subscribe for free
+                                </Button>
+                            </Group>
+                        </Card>
+                    </Box>:<></>
+                }
+                
             </Flex>
     )
 }
@@ -211,6 +216,5 @@ const ProductItem = () => {
 interface Pathpros {
     nurseries: string
 }
-
 
 export default ProductItem;

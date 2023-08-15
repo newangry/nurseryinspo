@@ -4,3 +4,8 @@
 .nursery-img img{
     height: 300px !important;
 }
+
+@font-face {
+    font-family: 'Caveat';
+    src: url('/Caveat-Regular.ttf') format('truetype');
+}
