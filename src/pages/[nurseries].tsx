@@ -186,7 +186,7 @@ const ProductItem = () => {
                     >
                         <Card shadow="sm" padding="lg" radius="md" withBorder>
                             <Text size="sm" color="dimmed">
-                                Thanks for reading Nursery! Subscribe below to receive new workspace in your inbox every Saturday and Sunday!
+                                Thank you for viewing Nursery Images! Subscribe below to receive new baby nurseries to your inbox every Sunday.
                             </Text>
 
                             <Group position="center" className='mt-[15px]' spacing='xs' grow>
