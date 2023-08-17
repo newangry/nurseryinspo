@@ -1,7 +1,7 @@
 import {
   Box,
   Text,
-  Input,
+  Select,
   Group,
   Button,
   Grid,
@@ -12,6 +12,7 @@ import MainNurseries from '@/components/Spaces/MainNurseries';
 import NurseriesItem from '@/components/Spaces/Nurseries';
 import { useEffect, useState } from 'react';
 import { Nurseries } from '@/types/nurseries';
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 
 const Spaces = () => {
 
@@ -23,7 +24,7 @@ const Spaces = () => {
   const [latestNurseries, setLatestNurseries] = useState<Nurseries[]>([]);
   const [isLoad, setIsLoad] = useState<boolean>(false);
   const [sendingMail, setSendingMail] = useState<boolean>(false);
-  const [search, setSearch] = useState<string>('');
+  const [search, setSearch] = useState<string>('boy');
 
   const getData = async () => {
     setIsLoad(true);
@@ -31,9 +32,9 @@ const Spaces = () => {
       const res = await fetch('/api/get_nurseries', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({search: search})
+        body: JSON.stringify({ search: search })
       });
       if (res.status != 200) {
       } else {
@@ -51,12 +52,10 @@ const Spaces = () => {
       setNurseries(data);
       setLatestNurseries(_latestNurseries);
     } catch (e) {
-      
+
     }
     setIsLoad(false);
   }
-
-  
 
   return (
     <Box>
@@ -73,7 +72,7 @@ const Spaces = () => {
             fontSize: '30px'
           })}
         >
-          Explore the workspaces of creative individuals,
+          Get Inspired by other beautiful baby nurseries,
         </Text>
         <Text align='center'
           sx={(theme) => ({
@@ -81,7 +80,7 @@ const Spaces = () => {
             color: theme.colors.gray[7],
           })}
         >
-          sent directly to your inbox every Saturday and Sunday.
+          Sent directly to your inbox every Sunday.
         </Text>
       </Box>
       <Box
@@ -90,8 +89,8 @@ const Spaces = () => {
           color: theme.colors.gray[6]
         })}
       >
-        <Group  className='mt-[20px]' spacing='xs' position="center" grow>
-          <Input  
+        <Group className='mt-[20px]' spacing='xs' position="center" grow>
+          {/* <Input  
             value={search} 
             onChange={(event) => { 
               setSearch(event.target.value)
@@ -104,23 +103,36 @@ const Spaces = () => {
             placeholder='Search baby nurseries' 
             
           />
-          <Button variant='outline' onClick={() => {getData()}} sx={((theme) => ({
+           */}
+          <Select
+            data={[
+              { value: 'boy', label: 'nursery for boy' },
+              { value: 'girls', label: 'nursery for girls' },
+              { value: 'neutral', label: 'gender neutral nursery' },
+              { value: 'small_room', label: 'small room' },
+              { value: 'middle_room', label: 'middle room' },
+              { value: 'big_room', label: 'big room' },
+            ]}
+            value='boy'
+            onChange={(value) => { if (value) setSearch(value) }}
+          />
+          <Button variant='outline' onClick={() => { getData() }} sx={((theme) => ({
             maxWidth: '150px'
           }))}>
             {
-              sendingMail?<Loader variant='dots'/>:'Search'
+              sendingMail ? <Loader variant='dots' /> : 'Search'
             }
           </Button>
         </Group>
       </Box>
       {
-        isLoad? <Loader variant='dots' mt={10} sx={(theme) =>({margin: 'auto'})}/> :
+        isLoad ? <Loader variant='dots' mt={10} sx={(theme) => ({ margin: 'auto' })} /> :
           <Box>
             <Grid className='mt-[20px]' gutter={70}>
               {
                 latestNurseries.map((item, key) =>
                   <Grid.Col md={6} lg={4} sm={1} key={key} >
-                    <MainNurseries data={item} index={key}/>
+                    <MainNurseries data={item} index={key} />
                   </Grid.Col>
                 )
               }
@@ -134,15 +146,17 @@ const Spaces = () => {
                 })}>PAST EDITIONS</Text>}
                 labelPosition="center" />
 
-              <Grid mt='10px'>
-                {
-                  nurseries.map((item, key) =>
-                    <Grid.Col key={key} md={6} lg={4} sm={1}>
-                      <NurseriesItem data={item} />
-                    </Grid.Col>
-                  )
-                }
-              </Grid>
+              <ResponsiveMasonry
+                columnsCountBreakPoints={{ 350: 2, 500: 2, 750: 3, 900: 4 }}
+              >
+                <Masonry>
+                  {
+                    nurseries.map((item, key) =>
+                        <NurseriesItem data={item} key={key}/>
+                    )
+                  }
+                </Masonry>
+              </ResponsiveMasonry>
             </Box>
           </Box>
       }

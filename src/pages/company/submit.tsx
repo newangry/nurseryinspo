@@ -225,6 +225,9 @@ const Submit = ({
                         { value: 'girls', label: 'nursery for boy' },
                         { value: 'boy', label: 'nursery for girls' },
                         { value: 'neutral', label: 'gender neutral nursery' },
+                        { value: 'small_room', label: 'small room' },
+                        { value: 'middle_room', label: 'middle room' },
+                        { value: 'big_room', label: 'big room' },
                     ]}
                     value={form.values.tag}
                     onChange={(value) => {form.setFieldValue('tag', value??'')}}

@@ -1,19 +1,19 @@
 import {
     Box,
     Text,
-    Input,
     Group,
     Button,
     Grid,
-    Loader
+    Loader,
+    Select
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import NurseriesItem from '@/components/Spaces/Nurseries';
 import { useEffect, useState } from 'react';
 import { Item, Nurseries, NurseriesState } from '@/types/nurseries';
 import { IconPlus } from '@tabler/icons-react';
 import Nursires from '@/components/Admin/NursiresItem';
 import EditModal from '@/components/Admin/EditModal';
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 
 const Spaces = () => {
 
@@ -24,7 +24,7 @@ const Spaces = () => {
     const [isLoad, setIsLoad] = useState<boolean>(false);
     const [nurseries, setNurseries] = useState<Nurseries[]>([]);
     const [data, setData] = useState<Nurseries>(NurseriesState);
-    const [search, setSearch] = useState<string>('');
+    const [search, setSearch] = useState<string>('boy');
     const [open, setOpen] = useState<boolean>(false);
     const [type, setType] = useState<string>('edit');
 
@@ -43,7 +43,7 @@ const Spaces = () => {
             } else {
 
             }
-            
+
             const data = await res.json();
             setNurseries(data);
 
@@ -53,7 +53,7 @@ const Spaces = () => {
         setIsLoad(false);
     }
 
-    const setStatus = async(status: boolean, nurseries_id: number) => {
+    const setStatus = async (status: boolean, nurseries_id: number) => {
         setOpen(false);
         setIsLoad(true);
         const res = await fetch('/api/admin/set_status', {
@@ -61,9 +61,9 @@ const Spaces = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({status: status, id: nurseries_id})
+            body: JSON.stringify({ status: status, id: nurseries_id })
         });
-        if(res.status == 200){
+        if (res.status == 200) {
             notifications.show({
                 title: 'Status',
                 message: 'Success',
@@ -80,18 +80,18 @@ const Spaces = () => {
         setIsLoad(false);
     }
 
-    const saveData = async(_data: Nurseries, images: string[], items: Item[]) => {
+    const saveData = async (_data: Nurseries, images: string[], items: Item[]) => {
         setOpen(false);
         setIsLoad(true);
         setData(NurseriesState);
-        if(images.length > 0){
+        if (images.length > 0) {
             _data['image'] = images[0];
         }
 
         try {
             const params = {
                 type,
-                data:_data,
+                data: _data,
                 items
             }
             const res = await fetch('/api/admin/add_nurseries', {
@@ -102,18 +102,18 @@ const Spaces = () => {
                 body: JSON.stringify(params)
             });
 
-            let id=0;
+            let id = 0;
             const data = await res.json();
-            for(let k =0; k<images.length; k++){
+            for (let k = 0; k < images.length; k++) {
                 const res = await fetch('/api/admin/add_nusery_images', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({image: images[k], nurseries_id: data.id})
+                    body: JSON.stringify({ image: images[k], nurseries_id: data.id })
                 });
             }
-            
+
 
             getData();
             notifications.show({
@@ -126,14 +126,14 @@ const Spaces = () => {
         }
         setIsLoad(false);
     }
-    
+
     const addNew = () => {
         setType('new');
         setData(NurseriesState);
         setOpen(true);
     }
-    
-    const deleteNursery = async() => {
+
+    const deleteNursery = async () => {
         setIsLoad(true);
         setOpen(false);
         const res = await fetch('/api/admin/delete_nurseries', {
@@ -141,10 +141,10 @@ const Spaces = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({id: data.id})
+            body: JSON.stringify({ id: data.id })
         });
         getData();
-        if(res.status == 200){
+        if (res.status == 200) {
             notifications.show({
                 title: 'Delete',
                 message: 'Success',
@@ -158,11 +158,11 @@ const Spaces = () => {
             })
         }
         setIsLoad(false);
-        
+
     }
 
     return (
-        
+
         <Box>
             <Box
                 className='text-center mt-[40px]'
@@ -171,7 +171,7 @@ const Spaces = () => {
                 })}
             >
                 <Group spacing='xs'>
-                    <Input
+                    {/* <Input
                         value={search}
                         onChange={(event) => {
                             setSearch(event.target.value)
@@ -182,6 +182,20 @@ const Spaces = () => {
                             }
                         }}
                         placeholder='Search baby nurseries'
+                    />
+                     */}
+                    <Select
+                        data={[
+                            { value: 'boy', label: 'nursery for boy' },
+                            { value: 'girls', label: 'nursery for girls' },
+                            { value: 'neutral', label: 'gender neutral nursery' },
+                            { value: 'small_room', label: 'small room' },
+                            { value: 'middle_room', label: 'middle room' },
+                            { value: 'big_room', label: 'big room' },
+                        ]}
+                        value='boy'
+
+                        onChange={(value) => { if (value) setSearch(value) }}
                     />
                     <Button variant='outline' onClick={() => { getData() }}>
                         {
@@ -194,22 +208,27 @@ const Spaces = () => {
                 </Group>
             </Box>
             {
-                isLoad? <Loader variant='dots' mt={10} sx={(theme) =>({margin: 'auto'})}/> :
-                nurseries.length == 0?<Text align='center' size='lg' mt={20}>  </Text>:
-                <Grid className='mt-[20px]' >
-                    {
-                        nurseries.map((item, key) =>
-                            <Grid.Col md={6} lg={4} sm={1} key={key}>
-                                <Nursires 
-                                    data={item} open={() => { setOpen(p_o => (!p_o)); setType('edit')}}
-                                    saveData={(data: Nurseries) => {setData(data)}}
-                                />
-                            </Grid.Col>
-                        )
-                    }
-                </Grid>
+                isLoad ? <Loader variant='dots' mt={10} sx={(theme) => ({ margin: 'auto' })} /> :
+                    nurseries.length == 0 ? <Text align='center' size='lg' mt={20}>  </Text> :
+                        
+                        <ResponsiveMasonry
+                            columnsCountBreakPoints={{ 350: 2, 500: 2, 750: 3, 900: 4 }}
+                            style={{marginTop: '20px'}}
+                        >
+                            <Masonry>
+                                {
+                                    nurseries.map((item, key) =>
+                                        <Nursires
+                                            data={item} open={() => { setOpen(p_o => (!p_o)); setType('edit') }}
+                                            saveData={(data: Nurseries) => { setData(data) }}
+                                            key={key}
+                                        />
+                                    )
+                                }
+                            </Masonry>
+                        </ResponsiveMasonry>
             }
-            <EditModal 
+            <EditModal
                 opened={open}
                 open={() => { setOpen(p_o => (!p_o)) }}
                 data={data}

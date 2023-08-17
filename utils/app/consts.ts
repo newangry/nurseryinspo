@@ -9,7 +9,7 @@ export const MENUS = [
         path: '/company/about'
     },
     {
-        name: 'Submit a workspace',
+        name: 'Submit Your Nursery',
         path: '/company/submit'
     }
 ];

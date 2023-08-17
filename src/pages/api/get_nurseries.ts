@@ -17,12 +17,14 @@ export default async function handler(
             nurseries_data = await supabaseAdmin.from('nurseries')
                         .select("*")
                         // .ilike("name | email | phone_number | location | zip_code", `%${search}%`)
-                        .or(`name.ilike.%${search}%, description.ilike.%${search}%, email.ilike.%${search}%`)
+                        // .or(`name.ilike.%${search}%, description.ilike.%${search}%, email.ilike.%${search}%`)
+                        .eq('tag', search);
         } else {
             nurseries_data = await supabaseAdmin.from('nurseries')
                         .select("*")    
                         // .ilike("name | email | phone_number | location | zip_code", `%${search}%`)
-                        .or(`name.ilike.%${search}%, description.ilike.%${search}%, email.ilike.%${search}%`)
+                        // .or(`name.ilike.%${search}%, description.ilike.%${search}%, email.ilike.%${search}%`)
+                        .eq('tag', search)
                         .eq('status', true);   
         }
         
