@@ -186,7 +186,7 @@ const ProductItem = () => {
                     >
                         <Card shadow="sm" padding="lg" radius="md" withBorder>
                             <Text size="sm" color="dimmed">
-                                Thanks for reading Workspaces! Subscribe below to receive new workspace in your inbox every Saturday and Sunday!
+                                Thanks for reading Nursery! Subscribe below to receive new workspace in your inbox every Saturday and Sunday!
                             </Text>
 
                             <Group position="center" className='mt-[15px]' spacing='xs' grow>
